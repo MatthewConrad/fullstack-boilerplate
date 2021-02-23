@@ -17,6 +17,7 @@
     ],
     "rules": {
         "quotes": [1, "double", { "avoidEscape": true }],
-        "prettier/prettier": ["warn", { "tabWidth": 4, "printWidth": 120 }]
+        "prettier/prettier": ["warn", { "tabWidth": 4, "printWidth": 120 }],
+        "@typescript-eslint/no-inferrable-types": 0
     }
 }

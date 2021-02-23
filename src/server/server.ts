@@ -1,6 +1,8 @@
-import express from "express";
+import express, { Router } from "express";
 import dotenv from "dotenv";
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+import session from "express-session";
+import "../ts/express-session";
+import oAuthRouter from "./oauth/routes";
 const port: number = process.env.PORT ? parseInt(process.env.PORT) : 5000;
 
 dotenv.config();
@@ -9,6 +11,14 @@ const app: express.Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("build"));
+app.use(
+    session({
+        secret: "asdfjkl;",
+        resave: false,
+        saveUninitialized: true,
+    })
+);
+app.use("/", oAuthRouter);
 
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", `http://localhost:${port}`);
@@ -17,13 +27,21 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.get("/ouath_test", (req, res) => {
+    if (req.session.access_token) {
+        res.status(200).send("OAuth successful.");
+    } else {
+        res.status(200).send("Not authenticated.");
+    }
+});
+
 if (process.env.ENV === "local") {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const reload = require("reload");
 
     reload(app)
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-        .then((reloadReturned: any) => {
+        .then((_reloadReturned: any) => {
             app.listen(port, () => {
                 console.log(`Server started on port ${port}.`);
             });
