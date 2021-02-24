@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import dotenv from "dotenv";
 import session from "express-session";
+import fetch from "node-fetch";
 import "../ts/express-session";
 import oAuthRouter from "./oauth/routes";
 const port: number = process.env.PORT ? parseInt(process.env.PORT) : 5000;
@@ -18,7 +19,6 @@ app.use(
         saveUninitialized: true,
     })
 );
-app.use("/", oAuthRouter);
 
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", `http://localhost:${port}`);
@@ -27,13 +27,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.get("/ouath_test", (req, res) => {
-    if (req.session.access_token) {
-        res.status(200).send("OAuth successful.");
-    } else {
-        res.status(200).send("Not authenticated.");
-    }
-});
+app.use(oAuthRouter);
 
 if (process.env.ENV === "local") {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
