@@ -1,4 +1,4 @@
-// overload express-session module so that TS will let us set properties on session
+// use declaration merging with the express-session module so that TS will let us set properties on session
 import "express-session";
 declare module "express-session" {
     export interface SessionData {

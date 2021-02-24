@@ -50,7 +50,7 @@ oAuthRouter.get("/callback", async (req, res) => {
         });
 });
 
-oAuthRouter.get("/oauth_test", async (req, res) => {
+oAuthRouter.get("/get/albums", async (req, res) => {
     if (req.session.access_token) {
         await fetch("https://api.spotify.com/v1/me/albums", {
             method: "GET",
